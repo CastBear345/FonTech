@@ -28,6 +28,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(u => u.UserId)
             .HasPrincipalKey(u => u.Id);
 
-        throw new NotImplementedException();
+        builder.HasData(new List<User>()
+        {
+            new User()
+            {
+                Id = 1,
+                Login = "CastBear",
+                Password = new string('-', 20),
+                CreatedAt = DateTime.UtcNow,
+            }
+        });
     }
 }

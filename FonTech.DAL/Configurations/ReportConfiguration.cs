@@ -21,5 +21,17 @@ public class ReportConfiguration : IEntityTypeConfiguration<Report>
             .Property(u => u.Description)
             .IsRequired()
             .HasMaxLength(2000);
+
+        builder.HasData(new List<Report>()
+        {
+            new Report()
+            {
+                Id = 1,
+                Name = "Report #1",
+                Description = "Test description",
+                UserId = 1,
+                CreatedAt = DateTime.UtcNow,
+            }
+        });
     }
 }

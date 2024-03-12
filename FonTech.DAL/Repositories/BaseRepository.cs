@@ -16,15 +16,15 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return _dbContext.Set<TEntity>();
     }
 
-    public Task<TEntity> CreateAsync(TEntity entity)
+    public async Task<TEntity> CreateAsync(TEntity entity)
     {
         if (entity == null)
             throw new ArgumentNullException("Entity is null");
 
-        _dbContext.Add(entity);
+        await _dbContext.AddAsync(entity);
         _dbContext.SaveChanges();
 
-        return Task.FromResult(entity);
+        return entity;
     }
 
     public Task<TEntity> UpdateAsync(TEntity entity)

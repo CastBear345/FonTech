@@ -68,39 +68,40 @@ public class ReportService : IReportServices
     }
 
     /// <inheritdoc />
-    public async Task<BaseResult<ReportDto>> GetReportByIdAsync(long Id)
+    public Task<BaseResult<ReportDto>> GetReportByIdAsync(long id)
     {
         ReportDto? report;
         try
         {
-            report = await _reportRepository
+            report = _reportRepository
                 .GetAll()
+                .AsEnumerable()
                 .Select(r => new ReportDto(r.Id, r.Name, r.Description, r.CreatedAt.ToLongDateString()))
-                .FirstOrDefaultAsync(r => r.Id == Id);
+                .FirstOrDefault(r => r.Id == id);
         }
         catch (Exception ex)
         {
             _logger.Error(ex, ex.Message);
-            return new BaseResult<ReportDto>
+            return Task.FromResult(new BaseResult<ReportDto>
             {
                 ErrorMessage = "Внутренняя ошибка сервера",
                 ErrorCode = 10,
-            };
+            });
         }
 
         if (report == null)
         {
-            _logger.Warning($"Отчёт с {Id} не найден!", Id);
-            return new BaseResult<ReportDto>
+            _logger.Warning($"Отчёт с {id} не найден!", id);
+            return Task.FromResult(new BaseResult<ReportDto>
             {
                 ErrorMessage = "Отчёт не найден!",
                 ErrorCode = 1,
-            };
+            });
         }
 
-        return new BaseResult<ReportDto>(){
+        return Task.FromResult(new BaseResult<ReportDto>(){
             Data = report,
-        };
+        });
     }
 
     /// <inheritdoc />
@@ -130,7 +131,7 @@ public class ReportService : IReportServices
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                UserId = user.Id
+                UserId = user.Id,
             };
 
             await _reportRepository.CreateAsync(report);
@@ -194,7 +195,7 @@ public class ReportService : IReportServices
         {
             var report = await _reportRepository
                 .GetAll()
-                .FirstOrDefaultAsync(u => u.Id == dto.id);
+                .FirstOrDefaultAsync(u => u.Id == dto.Id);
 
             var result = _reportValidator.ValidateOnNull(report);
             if (!result.IsSuccess)
