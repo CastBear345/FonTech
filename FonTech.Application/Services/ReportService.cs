@@ -11,21 +11,13 @@ using AutoMapper.Configuration.Annotations;
 
 namespace FonTech.Application.Services;
 
-public class ReportService : IReportServices
+public class ReportService(IBaseRepository<Report> reportRepository, ILogger logger, IBaseRepository<User> userRepository, IReportValidator reportValidator, IMapper mapper) : IReportServices
 {
-    private readonly IBaseRepository<Report> _reportRepository;
-    private readonly IBaseRepository<User> _userRepository;
-    private readonly IReportValidator _reportValidator;
-    private readonly IMapper _mapper;
-    private readonly ILogger _logger;
-
-    public ReportService(IBaseRepository<Report> reportRepository, ILogger logger, IBaseRepository<User> userRepository, IReportValidator reportValidator)
-    {
-        _reportRepository = reportRepository;
-        _reportValidator = reportValidator;
-        _userRepository = userRepository;
-        _logger = logger;
-    }
+    private readonly IBaseRepository<Report> _reportRepository = reportRepository;
+    private readonly IBaseRepository<User> _userRepository = userRepository;
+    private readonly IReportValidator _reportValidator = reportValidator;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     /// <inheritdoc />
     public async Task<CollectionResult<ReportDto>> GetReportsAsync(long userId)
@@ -50,7 +42,7 @@ public class ReportService : IReportServices
             };
         }
 
-        if(!reports.Any())
+        if (!reports.Any())
         {
             _logger.Warning("Отчёты не найдены!", reports.Length);
             return new CollectionResult<ReportDto>
@@ -99,7 +91,8 @@ public class ReportService : IReportServices
             });
         }
 
-        return Task.FromResult(new BaseResult<ReportDto>(){
+        return Task.FromResult(new BaseResult<ReportDto>()
+        {
             Data = report,
         });
     }
