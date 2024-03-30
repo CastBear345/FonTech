@@ -28,6 +28,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(u => u.UserId)
             .HasPrincipalKey(u => u.Id);
 
+        builder
+            .HasMany(u => u.Roles)
+            .WithMany(r => r.Users)
+            .UsingEntity<UserRole>(
+                l => l.HasOne<Role>().WithMany().HasForeignKey(ur => ur.RoleId),
+                l => l.HasOne<User>().WithMany().HasForeignKey(ur => ur.UserId)
+            );
+
         builder.HasData(new List<User>()
         {
             new User()

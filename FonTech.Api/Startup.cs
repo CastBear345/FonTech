@@ -1,9 +1,9 @@
-﻿using Asp.Versioning;
-using FonTech.Domain.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using FonTech.Domain.Settings;
 using System.Reflection;
+using Asp.Versioning;
 using System.Text;
 
 namespace FonTech.Api;
@@ -74,7 +74,6 @@ public static class Startup
                     Url = new Uri("https://github.com/CastBear345"),
                 },
             });
-
 
             options.SwaggerDoc("v2", new OpenApiInfo()
             {

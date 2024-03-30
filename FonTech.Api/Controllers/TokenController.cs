@@ -1,8 +1,8 @@
-﻿using FonTech.Application.Services;
-using FonTech.Domain.DTO;
-using FonTech.Domain.Interfaces.Services;
-using FonTech.Domain.Result;
+﻿using FonTech.Domain.Interfaces.Services;
+using FonTech.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using FonTech.Domain.Result;
+using FonTech.Domain.DTO;
 
 namespace FonTech.Api.Controllers;
 
@@ -18,12 +18,23 @@ public class TokenController : Controller
     {
         _tokenService = tokenService;
     }
-
+    
     /// <summary>
-    /// 
+    /// Обновление токена
     /// </summary>
     /// <param name="dto"></param>
-    /// <returns></returns>
+    /// <remarks>
+    /// Request for refresh token:
+    /// 
+    ///     POST
+    ///     {
+    ///        "AccessToken": "273gfbih8Gb8ifvhw87halokf09e..."
+    ///        "RefreshToken": "tfgd7g73gerh8H37gfy"
+    ///     }
+    ///     
+    /// </remarks>
+    /// <response code="200">Если токен успешно обновлён</response>
+    /// <response code="400">Если токен не был обновлён</response>
     [HttpPost]
     [Route("refresh")]
     public async Task<ActionResult<BaseResult<TokenDto>>> RefreshToken([FromBody] TokenDto dto)

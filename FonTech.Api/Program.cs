@@ -1,15 +1,21 @@
-using FonTech.DAL.DependencyInjection;
 using FonTech.Application.Dependency_Injection;
+using FonTech.Producer.DependencyInjection;
+using FonTech.Consumer.DependecyInjection;
+using FonTech.DAL.DependencyInjection;
+using FonTech.Domain.Settings;
+using FonTech.Api.MiddleWares;
 using FonTech.Api;
 using Serilog;
-using FonTech.Domain.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection(nameof(RabbitMqSettings)));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSettings));
 
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddProducer();
+builder.Services.AddConsumer();
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
@@ -18,6 +24,8 @@ builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwager();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -29,6 +37,8 @@ if (app.Environment.IsDevelopment())
         op.RoutePrefix = string.Empty;
     });
 }
+
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 

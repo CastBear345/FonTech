@@ -94,7 +94,8 @@ public class TokenService : ITokenService
         var newRefreshToken = GenerateRefreshToken();
 
         user.UserToken.RefreshToken = newRefreshToken;
-        await _userRepository.UpdateAsync(user);
+        _userRepository.Remove(user);
+        await _userRepository.SaveChangesAsync();
 
         return new BaseResult<TokenDto>()
         {
@@ -104,7 +105,5 @@ public class TokenService : ITokenService
                 RefreshToken = newRefreshToken,
             }
         };
-
-        throw new NotImplementedException();
     }
 }

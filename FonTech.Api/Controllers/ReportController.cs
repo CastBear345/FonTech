@@ -1,9 +1,9 @@
-﻿using Asp.Versioning;
-using FonTech.Domain.DTO.Report;
-using FonTech.Domain.Interfaces.Services;
-using FonTech.Domain.Result;
+﻿using FonTech.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
+using FonTech.Domain.DTO.Report;
 using Microsoft.AspNetCore.Mvc;
+using FonTech.Domain.Result;
+using Asp.Versioning;
 
 namespace FonTech.Api.Controllers;
 
@@ -27,14 +27,14 @@ public class ReportController : ControllerBase
     /// <remarks>
     /// Request for create report
     /// 
-    ///     POST
+    ///     GET
     ///     {
     ///        "userId": 1
     ///     }
     ///     
     /// </remarks>
-    /// <response code="200">Если отчёт создан</response>
-    /// <response code="400">Если отчёт не был создан</response>
+    /// <response code="200">Если отчёт получен</response>
+    /// <response code="400">Если отчёт не был получен</response>
     [HttpGet("reports/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,14 +57,14 @@ public class ReportController : ControllerBase
     /// <remarks>
     /// Request for create report
     /// 
-    ///     POST
+    ///     GET
     ///     {
     ///        "Id": 1
     ///     }
     ///     
     /// </remarks>
-    /// <response code="200">Если отчёт создан</response>
-    /// <response code="400">Если отчёт не был создан</response>
+    /// <response code="200">Если отчёт получен</response>
+    /// <response code="400">Если отчёт не был получен</response>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -119,14 +119,14 @@ public class ReportController : ControllerBase
     /// <remarks>
     /// Request for create report
     /// 
-    ///     POST
+    ///     DELETE
     ///     {
     ///        "Id": 1
     ///     }
     ///     
     /// </remarks>
-    /// <response code="200">Если отчёт создан</response>
-    /// <response code="400">Если отчёт не был создан</response>
+    /// <response code="200">Если отчёт успешно удалён</response>
+    /// <response code="400">Если отчёт не был удалён</response>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -149,7 +149,7 @@ public class ReportController : ControllerBase
     /// <remarks>
     /// Request for create report
     /// 
-    ///     POST
+    ///     PUT
     ///     {
     ///        "Id": 1
     ///        "name": "Report #2",
@@ -157,8 +157,8 @@ public class ReportController : ControllerBase
     ///     }
     ///     
     /// </remarks>
-    /// <response code="200">Если отчёт создан</response>
-    /// <response code="400">Если отчёт не был создан</response>
+    /// <response code="200">Если отчёт обновлён</response>
+    /// <response code="400">Если отчёт не был обновлён</response>
     [HttpPut()]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
