@@ -8,14 +8,21 @@ using FonTech.Domain.DTO.Report;
 using FonTech.Domain.Interfaces.Validations;
 using AutoMapper;
 using AutoMapper.Configuration.Annotations;
+using FonTech.Producer.Interfaces;
+using Microsoft.Extensions.Options;
+using FonTech.Domain.Settings;
 
 namespace FonTech.Application.Services;
 
-public class ReportService(IBaseRepository<Report> reportRepository, ILogger logger, IBaseRepository<User> userRepository, IReportValidator reportValidator, IMapper mapper) : IReportServices
+public class ReportService(IBaseRepository<Report> reportRepository, ILogger logger,
+    IBaseRepository<User> userRepository, IReportValidator reportValidator,
+    IMapper mapper, IMessageProducer messageProducer, IOptions<RabbitMqSettings> rabbitMqOptions) : IReportServices
 {
+    private readonly IOptions<RabbitMqSettings> _rabbitMqOptions = rabbitMqOptions;
     private readonly IBaseRepository<Report> _reportRepository = reportRepository;
     private readonly IBaseRepository<User> _userRepository = userRepository;
     private readonly IReportValidator _reportValidator = reportValidator;
+    private readonly IMessageProducer _messageProducer = messageProducer;
     private readonly IMapper _mapper = mapper;
     private readonly ILogger _logger = logger;
 
@@ -126,6 +133,9 @@ public class ReportService(IBaseRepository<Report> reportRepository, ILogger log
         };
 
         await _reportRepository.CreateAsync(report);
+        await _reportRepository.SaveChangesAsync();
+
+        _messageProducer.SendMessage(report, _rabbitMqOptions.Value.RoutingKey, _rabbitMqOptions.Value.ExchangeName);
 
         return new BaseResult<ReportDto>()
         {

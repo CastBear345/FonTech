@@ -37,15 +37,6 @@ public class RabbitMqListener : BackgroundService
         };
         _channel.BasicConsume(_options.Value.QueueName, false, consumer);
 
-        Dispose();
-
         return Task.CompletedTask;
-    }
-
-    public override void Dispose()
-    {
-        _channel.Dispose();
-        _connection.Dispose();
-        base.Dispose();
     }
 }
